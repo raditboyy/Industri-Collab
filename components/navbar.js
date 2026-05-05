@@ -16,11 +16,12 @@ export default function Navbar() {
 
   const ADMIN_EMAIL = "admin@cetaklagi.com";
 
-  // Fungsi untuk hitung jumlah item unik di keranjang
+  // Fungsi untuk hitung jumlah total QTY item di keranjang (SUDAH DIPERBAIKI)
   const updateCartBadge = () => {
-    // Pakai key 'cart' biar sama dengan halaman keranjang & detail produk
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartCount(cart.length);
+    // Hitung total qty dari semua produk, bukan cuma jumlah macam barang
+    const totalQty = cart.reduce((total, item) => total + (item.qty || 1), 0);
+    setCartCount(totalQty);
   };
 
   useEffect(() => {
@@ -41,16 +42,14 @@ export default function Navbar() {
     };
 
     checkSession();
-    updateCartBadge();
+    updateCartBadge(); // Panggil saat pertama load
 
     // 1. Dengerin perubahan storage dari tab/halaman lain
     window.addEventListener('storage', updateCartBadge);
     
-    // 2. Dengerin sinyal custom 'cart-updated' (biar double aman)
+    // 2. Dengerin sinyal custom dari Pop-Up Produk (Dua-duanya dipasang biar aman)
+    window.addEventListener('cartUpdated', updateCartBadge);
     window.addEventListener('cart-updated', updateCartBadge);
-
-    // 3. Trick: Cek tiap 1 detik biar angka langsung berubah pas klik "+ Keranjang"
-    const interval = setInterval(updateCartBadge, 1000);
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
@@ -59,9 +58,9 @@ export default function Navbar() {
     return () => {
       authListener.subscription.unsubscribe();
       window.removeEventListener('storage', updateCartBadge);
+      window.removeEventListener('cartUpdated', updateCartBadge);
       window.removeEventListener('cart-updated', updateCartBadge);
-      window.removeEventListener('scroll', handleScroll); // Clean up scroll listener
-      clearInterval(interval);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -72,7 +71,7 @@ export default function Navbar() {
     { name: 'Tentang Kami', path: '/about' },
   ];
 
-  // LOGIKA WARNA BERDASARKAN SCROLL (Cuma aktif di Homepage '/')
+  // LOGIKA WARNA BERDASARKAN SCROLL
   const isHome = pathname === '/';
   const navBgClass = isHome && !isScrolled ? "bg-transparent py-4" : "bg-white border-b border-gray-200 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.05)]";
   const textColorClass = isHome && !isScrolled ? "text-white hover:text-blue-200" : "text-gray-500 hover:text-black";
@@ -84,8 +83,6 @@ export default function Navbar() {
         
         {/* LOGO */}
         <Link href="/" className="hover:opacity-80 transition-opacity flex items-center">
-          {/* Cek apakah lu mau Logo berubah warna juga. Kalo iya, prop di <Logo /> harus disesuaikan. */}
-          {/* Sementara ini tetap panggil Logo lu */}
           <Logo /> 
         </Link>
 
@@ -113,7 +110,7 @@ export default function Navbar() {
                 pathname === "/admin" 
                 ? "bg-[#D94841] text-white border-[#D94841]" 
                 : isHome && !isScrolled 
-                  ? "text-white border-white hover:bg-white hover:text-[#2536F4]" // Admin button saat background biru
+                  ? "text-white border-white hover:bg-white hover:text-[#2536F4]" 
                   : "text-[#D94841] border-[#D94841] hover:bg-[#D94841] hover:text-white"
               }`}
             >
@@ -125,12 +122,13 @@ export default function Navbar() {
         {/* Menu Kanan */}
         <div className="flex items-center gap-4 sm:gap-6">
           
-          {/* Ikon Keranjang dengan Badge Otomatis */}
+          {/* Ikon Keranjang */}
           <Link href="/cart" className={`relative transition-colors p-1 ${textColorClass}`}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
             
+            {/* Animasi Bouncing Badge Keranjang */}
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] text-[10px] font-black text-white bg-[#D94841] rounded-full px-1 border-2 border-white animate-bounce">
                 {cartCount}
