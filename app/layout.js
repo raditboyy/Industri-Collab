@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/navbar"; 
 import ProtectedRoute from "@/components/ProtectedRoute"; 
+import FloatingMenu from "@/components/floatingmenu"; // TAMBAHAN: Import Floating Menu
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,9 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} antialiased bg-white`}>
         {/* Navbar cuma muncul kalau BUKAN halaman company-profile */}
         {!isNoNavbar && <Navbar />} 
+        
+        {/* TAMBAHAN: Tombol melayang dipasang di luar main biar muncul terus */}
+        <FloatingMenu />
         
         <ProtectedRoute>
           <main>

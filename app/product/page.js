@@ -166,7 +166,7 @@ export default function Product() {
     <div className="min-h-screen bg-[#FAFAFA] overflow-y-auto">
       <section className="pt-24 pb-12 px-4 max-w-4xl mx-auto text-center">
         <h1 className="text-3xl md:text-5xl font-black text-[#2E3C8B] mb-4">Katalog Produk</h1>
-        <p className="text-gray-500 italic">Kualitas cetak premium untuk UMKM.</p>
+        <p className="text-gray-500 italic">Cetak Lagi</p>
       </section>
 
       <div className="flex justify-center mb-10 sticky top-20 z-40 px-4">
