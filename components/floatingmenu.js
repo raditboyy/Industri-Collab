@@ -16,7 +16,7 @@ export default function FloatingMenu() {
           }`}
         >
           {/* Tombol Shopee */}
-          <a href="https://shopee.co.id/toko-lu-disini" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
+          <a href="https://shopee.co.id/cetaklagi?entryPoint=ShopBySearch&searchKeyword=cetak%20lagi%20pekalongan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
             <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#EE4D2D]">Shopee</span>
             <div className="w-12 h-12 bg-[#EE4D2D] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -26,7 +26,7 @@ export default function FloatingMenu() {
           </a>
 
           {/* Tombol Instagram */}
-          <a href="https://instagram.com/cetaklagi_pekalongan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
+          <a href="https://instagram.com/cetaklagi.pkl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
             <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#E1306C]">Instagram</span>
             <div className="w-12 h-12 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
