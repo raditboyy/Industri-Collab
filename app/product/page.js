@@ -24,24 +24,31 @@ function ProductCard({ product, formatRupiah }) {
   const handleAddQty = () => { if (qty < product.stock) setQty(qty + 1); };
   const handleMinQty = () => { if (qty > 1) setQty(qty - 1); };
 
+  // FUNGSI INI UDAH GUA PERBAIKI BIAR NYIMPANNYA PAKAI NAMA "quantity"
   const handleAddToCart = () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingIndex = cart.findIndex((item) => item.id === product.id);
     
     if (existingIndex >= 0) {
-      cart[existingIndex].qty += qty;
+      // Ambil quantity yang lama, tambahin sama qty yang baru diinput
+      const currentQty = cart[existingIndex].quantity || cart[existingIndex].qty || 1;
+      cart[existingIndex].quantity = currentQty + qty;
+      
+      // Hapus data "qty" lama biar nggak nyampah dan bikin bingung
+      delete cart[existingIndex].qty;
     } else {
-      cart.push({ ...product, qty });
+      // Simpan barang baru pakai nama "quantity"
+      cart.push({ ...product, quantity: qty });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated")); // Alarm buat navbar
+    window.dispatchEvent(new Event("cartUpdated")); 
     setShowModal(false);
   };
 
   const handleBuyNow = () => {
     handleAddToCart();
-    router.push('/cart'); // Ganti '/cart' kalau rute keranjang lu beda
+    router.push('/cart'); 
   };
 
   return (

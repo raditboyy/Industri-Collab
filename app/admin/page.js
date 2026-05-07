@@ -22,6 +22,7 @@ export default function AdminDashboard() {
   // ==========================================
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [expandedCategories, setExpandedCategories] = useState([]); // TAMBAHAN: State buat buka tutup tabel
 
   const ADMIN_EMAIL = "admin@cetaklagi.com";
 
@@ -139,6 +140,23 @@ export default function AdminDashboard() {
   const pendingOrders = orders.filter(o => o.status === "Menunggu Pembayaran").length;
   const processOrders = orders.filter(o => o.status === "Diproses").length;
 
+  // TAMBAHAN: Fungsi Buka/Tutup Tabel & Pengelompokan Data
+  const toggleExpand = (categoryName) => {
+    if (expandedCategories.includes(categoryName)) {
+      setExpandedCategories(expandedCategories.filter(item => item !== categoryName));
+    } else {
+      setExpandedCategories([...expandedCategories, categoryName]);
+    }
+  };
+
+  const groupedOrders = orders.reduce((acc, order) => {
+    // Kita kelompokkan berdasarkan nama produk (atau field category jika di database ada)
+    const cat = order.product_name || "Lainnya"; 
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(order);
+    return acc;
+  }, {});
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] pt-24 pb-20 px-4 relative">
       <div className="max-w-6xl mx-auto space-y-16">
@@ -149,7 +167,7 @@ export default function AdminDashboard() {
         </header>
 
         {/* ========================================================= */}
-        {/* SECTION 1: MANAJEMEN PRODUK (KODE LAMA LU)                */}
+        {/* SECTION 1: MANAJEMEN PRODUK (KODE LAMA LU - AMAN 100%)    */}
         {/* ========================================================= */}
         <section>
           <div className="flex items-center gap-4 mb-6">
@@ -239,7 +257,7 @@ export default function AdminDashboard() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 2: MANAJEMEN PESANAN (FITUR BARU)                 */}
+        {/* SECTION 2: MANAJEMEN PESANAN (KODE YANG DIUPDATE)         */}
         {/* ========================================================= */}
         <section>
           <div className="flex items-center gap-4 mb-8 pt-8">
@@ -275,61 +293,109 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* DAFTAR PESANAN */}
+          {/* DAFTAR PESANAN PER KATEGORI (TABEL BARU) */}
           {loadingOrders ? (
             <div className="flex justify-center py-10">
               <div className="w-8 h-8 border-4 border-[#2E3C8B]/20 border-t-[#2E3C8B] rounded-full animate-spin"></div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-8">
               {orders.length === 0 ? (
                 <div className="bg-white p-12 rounded-[2rem] border border-gray-100 text-center shadow-sm">
                   <p className="text-gray-400 font-bold">Belum ada pesanan masuk.</p>
                 </div>
               ) : (
-                orders.map((order) => (
-                  <div key={order.id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-gray-200 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="bg-gray-100 text-gray-500 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-gray-200">
-                          ORD-{order.id}
-                        </span>
-                        <span className="text-[10px] font-bold text-gray-400">
-                          {new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-bold text-gray-800">{order.product_name}</h3>
-                      <p className="text-[#2E3C8B] font-black">{formatRupiah(order.total_price)}</p>
-                    </div>
+                Object.entries(groupedOrders).map(([kategori, items], index) => {
+                  const isExpanded = expandedCategories.includes(kategori);
+                  const listTampil = isExpanded ? items : items.slice(0, 10);
+                  const totalSisa = items.length - 10;
 
-                    <div className="flex items-center gap-4 w-full md:w-auto pt-4 md:pt-0 border-t border-gray-50 md:border-none">
-                      <div className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest w-full text-center md:w-auto
-                        ${order.status === "Menunggu Pembayaran" ? "bg-orange-50 text-orange-600 border border-orange-100" : 
-                          order.status === "Diproses" ? "bg-blue-50 text-blue-600 border border-blue-100" : 
-                          "bg-green-50 text-green-600 border border-green-100"}
-                      `}>
-                        {order.status}
+                  return (
+                    <div key={index} className="bg-white rounded-[40px] shadow-sm border border-gray-100 p-8">
+                      <div className="flex justify-between items-center mb-6 px-2">
+                        <h2 className="text-xl font-bold text-[#2E3C8B] flex items-center gap-3">
+                          <span className="w-2 h-8 bg-[#D94841] rounded-full"></span>
+                          {kategori}
+                        </h2>
+                        <span className="text-sm font-bold text-gray-400 bg-gray-50 px-4 py-1 rounded-full border border-gray-100">
+                          {items.length} Pesanan
+                        </span>
                       </div>
 
-                      <div className="flex gap-2">
-                        <button 
-                          onClick={() => updateStatus(order.id, "Diproses")}
-                          disabled={order.status === "Diproses" || order.status === "Selesai"}
-                          className="bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-xl hover:bg-blue-700 disabled:opacity-20 disabled:hover:bg-blue-600 transition-all"
-                        >
-                          PROSES
-                        </button>
-                        <button 
-                          onClick={() => updateStatus(order.id, "Selesai")}
-                          disabled={order.status === "Selesai"}
-                          className="bg-[#25D366] text-white text-[10px] font-black px-4 py-2 rounded-xl hover:bg-[#1DA851] disabled:opacity-20 disabled:hover:bg-[#25D366] transition-all"
-                        >
-                          SELESAI
-                        </button>
+                      {/* TABEL */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                          <thead>
+                            <tr className="text-gray-400 text-[11px] uppercase tracking-[2px] border-b border-gray-100">
+                              <th className="pb-4 font-bold pl-4">ID & Tanggal</th>
+                              <th className="pb-4 font-bold">Total</th>
+                              <th className="pb-4 font-bold text-center">Status</th>
+                              <th className="pb-4 font-bold text-right pr-4">Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-50">
+                            {listTampil.map((order) => (
+                              <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
+                                <td className="py-5 pl-4">
+                                  <div className="text-xs font-bold text-gray-800 mb-1">ORD-{order.id}</div>
+                                  <div className="text-[10px] text-gray-400">
+                                    {new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                  </div>
+                                </td>
+                                <td className="py-5 font-bold text-[#2E3C8B]">
+                                  {formatRupiah(order.total_price)}
+                                </td>
+                                <td className="py-5 text-center">
+                                  <span className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-wider uppercase ${
+                                    order.status === "Menunggu Pembayaran" ? "bg-orange-50 text-orange-600 border border-orange-100" : 
+                                    order.status === "Diproses" ? "bg-blue-50 text-blue-600 border border-blue-100" : 
+                                    "bg-green-50 text-green-600 border border-green-100"
+                                  }`}>
+                                    {order.status}
+                                  </span>
+                                </td>
+                                <td className="py-5 text-right pr-4">
+                                  <div className="flex justify-end gap-2">
+                                    <button 
+                                      onClick={() => updateStatus(order.id, "Diproses")}
+                                      disabled={order.status === "Diproses" || order.status === "Selesai"}
+                                      className="bg-blue-600 hover:bg-blue-700 disabled:opacity-20 disabled:hover:bg-blue-600 text-white px-5 py-2 rounded-xl text-[10px] font-black transition-all shadow-md active:scale-95"
+                                    >
+                                      PROSES
+                                    </button>
+                                    <button 
+                                      onClick={() => updateStatus(order.id, "Selesai")}
+                                      disabled={order.status === "Selesai"}
+                                      className="bg-[#22C55E] hover:bg-green-600 disabled:opacity-20 disabled:hover:bg-[#22C55E] text-white px-5 py-2 rounded-xl text-[10px] font-black transition-all shadow-md active:scale-95"
+                                    >
+                                      SELESAI
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
+
+                      {/* TOMBOL LIHAT SEMUA */}
+                      {items.length > 10 && (
+                        <div className="mt-8 flex justify-center border-t border-gray-100 pt-6">
+                          <button 
+                            onClick={() => toggleExpand(kategori)}
+                            className="bg-[#F8F9FB] text-[#2E3C8B] px-8 py-3 rounded-2xl text-xs font-black hover:bg-[#2E3C8B] hover:text-white transition-all shadow-sm flex items-center gap-2 group"
+                          >
+                            {isExpanded ? 'TUTUP SEBAGIAN' : `LIHAT ${totalSisa} PESANAN LAINNYA`}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" 
+                              className={`w-3 h-3 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:translate-y-1'}`}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}
