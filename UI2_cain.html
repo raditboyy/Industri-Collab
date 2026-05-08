@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cain AI - Percetakan Jogja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === 1. BACKGROUND UTAMA (Deep Blue ke Dark Cyan) === */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #1e293b 50%, #083344 100%);
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* === 2. CONTAINER CHAT MELAYANG === */
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* === 3. HEADER KACA (Terang) === */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .header h1 {
+            margin: 0;
+            color: #0f172a; /* Navy Hitam */
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            color: #0284c7; /* Biru Laut */
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* === 4. AREA OBROLAN === */
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+        
+        /* Balon Cain (Kiri) - Terang, teks hitam */
+        .bot-msg {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            padding: 14px 18px;
+            border-radius: 20px 20px 20px 0;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,1);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Balon User (Kanan) - Gradasi Biru ke Ungu */
+        .user-msg {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 20px 20px 0 20px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Animasi Pop-up Halus */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === 5. AREA INPUT BAWAH (Menyatu dengan Background) === */
+        .input-area {
+            padding: 20px;
+            background: transparent; /* Basmi kotak abu-abu! */
+            display: flex;
+            gap: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        button {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.6);
+        }
+        button svg {
+            width: 20px;
+            height: 20px;
+            transform: rotate(45deg);
+            margin-left: -3px; /* Penyesuaian panah */
+        }
+        /* === 6. CATATAN KECIL DI BAWAH (FOOTER NOTE) === */
+        .footer-note {
+            text-align: right;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5); /* Warna redup biar nggak norak */
+            padding: 0 25px 15px 25px;
+            margin-top: -5px; /* Narik teksnya biar deket sama kotak input */
+            font-weight: 500;
+        }
+        
+        .footer-note a {
+            color: #38bdf8; /* Warna biru khas link */
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-note a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.8); /* Efek nyala pas disorot mouse */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="header">
+            <h1>🤖 Cain Chatbot</h1>
+            <p>Asisten Cetak Lagi</p>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+            <div class="bot-msg">Halo kak! Cain di sini. Ada yang bisa Cain bantu cetak hari ini? ✨</div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Tanya harga, bahan, atau pengiriman..." autocomplete="off" onkeypress="handleEnter(event)">
+            <button onclick="kirimPesan()">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            </button>
+        </div>
+
+        <div class="footer-note">
+            Cain error atau salah jawab? <a href="https://wa.me/6282314941408" target="_blank">Hubungi Admin WA</a>
+        </div>
+    </div>
+
+    <script>
+        // Bikin ID unik ala kadarnya untuk memori Cain
+        const sessionId = "user_" + Math.random().toString(36).substr(2, 9);
+        const chatBox = document.getElementById("chat-box");
+        const inputField = document.getElementById("user-input");
+
+        function handleEnter(e) {
+            if (e.key === "Enter") kirimPesan();
+        }
+
+        async function kirimPesan() {
+            const pesan = inputField.value.trim();
+            if (!pesan) return;
+
+            // 1. Munculkan pesan User di layar
+            chatBox.innerHTML += `<div class="user-msg">${pesan}</div>`;
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // 2. Tembak data ke Python (FastAPI) kamu
+                const response = await fetch("http://127.0.0.1:8000/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ session_id: sessionId, message: pesan })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // 3. Munculkan balasan Cain di layar
+                    chatBox.innerHTML += `<div class="bot-msg">${data.answer}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="bot-msg">Waduh, server Cain lagi error nih kak.</div>`;
+                }
+            } catch (error) {
+                chatBox.innerHTML += `<div class="bot-msg" style="color: red;">Koneksi gagal! Pastikan uvicorn Python udah nyala.</div>`;
+            }
+            
+            // Otomatis scroll ke paling bawah
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
