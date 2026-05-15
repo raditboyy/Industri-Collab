@@ -22,7 +22,11 @@ export default function AdminDashboard() {
   // ==========================================
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
-  const [expandedCategories, setExpandedCategories] = useState([]); // TAMBAHAN: State buat buka tutup tabel
+  const [expandedCategories, setExpandedCategories] = useState([]); 
+
+  // TAMBAHAN STATE UNTUK FILTER & LIMIT PESANAN
+  const [filterStatus, setFilterStatus] = useState("Semua");
+  const [limitTampil, setLimitTampil] = useState(10);
 
   const ADMIN_EMAIL = "admin@cetaklagi.com";
 
@@ -35,14 +39,13 @@ export default function AdminDashboard() {
     if (!session || session.user.email !== ADMIN_EMAIL) {
       router.push("/login");
     } else {
-      // Jika lolos cek admin, load semua data
       fetchProducts();
       fetchAllOrders();
     }
   };
 
   // ==========================================
-  // FUNGSI MANAJEMEN PRODUK (KODE LAMA - AMAN)
+  // FUNGSI MANAJEMEN PRODUK
   // ==========================================
   const fetchProducts = async () => {
     setLoading(true);
@@ -117,7 +120,7 @@ export default function AdminDashboard() {
   };
 
   // ==========================================
-  // FUNGSI MANAJEMEN PESANAN (FITUR BARU)
+  // FUNGSI MANAJEMEN PESANAN
   // ==========================================
   const fetchAllOrders = async () => {
     setLoadingOrders(true);
@@ -131,16 +134,14 @@ export default function AdminDashboard() {
     if (error) {
       setNotification({ isOpen: true, title: "Gagal Update", message: "Gagal merubah status pesanan.", type: "error" });
     } else {
-      fetchAllOrders(); // Refresh data otomatis
+      fetchAllOrders(); 
     }
   };
 
-  // Statistik Pesanan
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === "Menunggu Pembayaran").length;
   const processOrders = orders.filter(o => o.status === "Diproses").length;
 
-  // TAMBAHAN: Fungsi Buka/Tutup Tabel & Pengelompokan Data
   const toggleExpand = (categoryName) => {
     if (expandedCategories.includes(categoryName)) {
       setExpandedCategories(expandedCategories.filter(item => item !== categoryName));
@@ -149,8 +150,16 @@ export default function AdminDashboard() {
     }
   };
 
-  const groupedOrders = orders.reduce((acc, order) => {
-    // Kita kelompokkan berdasarkan nama produk (atau field category jika di database ada)
+  // LOGIKA FILTER STATUS SEBELUM DI-GROUP
+  const filteredOrders = orders.filter((order) => {
+    if (filterStatus === "Semua") return true;
+    if (filterStatus === "Proses") return order.status === "Diproses";
+    if (filterStatus === "Selesai") return order.status === "Selesai";
+    if (filterStatus === "Menunggu") return order.status === "Menunggu Pembayaran";
+    return true;
+  });
+
+  const groupedOrders = filteredOrders.reduce((acc, order) => {
     const cat = order.product_name || "Lainnya"; 
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(order);
@@ -167,7 +176,7 @@ export default function AdminDashboard() {
         </header>
 
         {/* ========================================================= */}
-        {/* SECTION 1: MANAJEMEN PRODUK (KODE LAMA LU - AMAN 100%)    */}
+        {/* SECTION 1: MANAJEMEN PRODUK */}
         {/* ========================================================= */}
         <section>
           <div className="flex items-center gap-4 mb-6">
@@ -176,7 +185,7 @@ export default function AdminDashboard() {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            {/* SISI KIRI: Form Tambah Produk */}
+            {/* Form Tambah Produk */}
             <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
               <h2 className="text-xl font-bold text-[#2E3C8B] mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-blue-50 text-[#2E3C8B] rounded-lg flex items-center justify-center text-sm">＋</span>
@@ -218,7 +227,7 @@ export default function AdminDashboard() {
               </form>
             </div>
 
-            {/* SISI KANAN: Katalog Produk Aktif */}
+            {/* Katalog Produk Aktif */}
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-[#2E3C8B] tracking-tight">Katalog Aktif</h2>
@@ -257,7 +266,7 @@ export default function AdminDashboard() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 2: MANAJEMEN PESANAN (KODE YANG DIUPDATE)         */}
+        {/* SECTION 2: MANAJEMEN PESANAN (DENGAN FILTER & LIMIT) */}
         {/* ========================================================= */}
         <section>
           <div className="flex items-center gap-4 mb-8 pt-8">
@@ -293,22 +302,57 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* DAFTAR PESANAN PER KATEGORI (TABEL BARU) */}
+          {/* FITUR BARU: MENU FILTER & LIMIT TAMPILAN */}
+          <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Status:</label>
+              <select 
+                value={filterStatus} 
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="flex-1 sm:w-auto bg-gray-50 border border-gray-200 text-[#2E3C8B] font-bold text-sm rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-[#2E3C8B]/30 transition-all cursor-pointer"
+              >
+                <option value="Semua">Semua Pesanan</option>
+                <option value="Menunggu">Menunggu Pembayaran</option>
+                <option value="Proses">Sedang Diproses</option>
+                <option value="Selesai">Selesai</option>
+              </select>
+            </div>
+            
+            <div className="hidden sm:block w-px h-8 bg-gray-200"></div>
+            
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Tampilkan:</label>
+              <select 
+                value={limitTampil} 
+                onChange={(e) => setLimitTampil(e.target.value === "All" ? "All" : Number(e.target.value))}
+                className="flex-1 sm:w-auto bg-gray-50 border border-gray-200 text-[#2E3C8B] font-bold text-sm rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-[#2E3C8B]/30 transition-all cursor-pointer"
+              >
+                <option value={10}>10 Pesanan</option>
+                <option value={20}>20 Pesanan</option>
+                <option value="All">Semua (All)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* DAFTAR PESANAN PER KATEGORI */}
           {loadingOrders ? (
             <div className="flex justify-center py-10">
               <div className="w-8 h-8 border-4 border-[#2E3C8B]/20 border-t-[#2E3C8B] rounded-full animate-spin"></div>
             </div>
           ) : (
             <div className="space-y-8">
-              {orders.length === 0 ? (
+              {Object.keys(groupedOrders).length === 0 ? (
                 <div className="bg-white p-12 rounded-[2rem] border border-gray-100 text-center shadow-sm">
-                  <p className="text-gray-400 font-bold">Belum ada pesanan masuk.</p>
+                  <p className="text-gray-400 font-bold">Tidak ada pesanan yang sesuai filter.</p>
                 </div>
               ) : (
                 Object.entries(groupedOrders).map(([kategori, items], index) => {
                   const isExpanded = expandedCategories.includes(kategori);
-                  const listTampil = isExpanded ? items : items.slice(0, 10);
-                  const totalSisa = items.length - 10;
+                  
+                  // Logika Limit yang terhubung ke Dropdown
+                  const limitNum = limitTampil === "All" ? items.length : limitTampil;
+                  const listTampil = isExpanded ? items : items.slice(0, limitNum);
+                  const totalSisa = items.length - limitNum;
 
                   return (
                     <div key={index} className="bg-white rounded-[40px] shadow-sm border border-gray-100 p-8">
@@ -378,8 +422,8 @@ export default function AdminDashboard() {
                         </table>
                       </div>
 
-                      {/* TOMBOL LIHAT SEMUA */}
-                      {items.length > 10 && (
+                      {/* TOMBOL LIHAT SEMUA (Cuma muncul kalau sisa pesanan > 0) */}
+                      {totalSisa > 0 && (
                         <div className="mt-8 flex justify-center border-t border-gray-100 pt-6">
                           <button 
                             onClick={() => toggleExpand(kategori)}
@@ -388,7 +432,7 @@ export default function AdminDashboard() {
                             {isExpanded ? 'TUTUP SEBAGIAN' : `LIHAT ${totalSisa} PESANAN LAINNYA`}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" 
                               className={`w-3 h-3 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:translate-y-1'}`}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5-7.5-7.5-7.5" />
                             </svg>
                           </button>
                         </div>
@@ -403,7 +447,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ========================================================= */}
-      {/* CUSTOM POP-UP (KODE LAMA LU - JANGAN DIUBAH)              */}
+      {/* CUSTOM POP-UP */}
       {/* ========================================================= */}
       {notification.isOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">

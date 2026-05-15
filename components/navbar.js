@@ -3,33 +3,31 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import Logo from '@/components/logo';
+import Logo from '@/components/logo'; 
 
 export default function Navbar() {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
-  
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const ADMIN_EMAIL = "admin@cetaklagi.com";
+  const ADMIN_EMAIL = "admin@cetaklagi.com"; 
+  
+  // WARNA TEMA BALIK KE BIRU TUA CETAKLAGI
+  const themeColor = "#2E3C8B"; 
+  const badgeColor = "#D94841"; // Merah untuk notif keranjang
 
-  // FUNGSI INI UDAH GUA STANDARISASI PAKAI "quantity"
   const updateCartBadge = () => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    // Biar aman, kita cek "quantity" (yang baru) atau "qty" (kalau ada sisa data lama)
     const totalQty = cart.reduce((total, item) => total + (item.quantity || item.qty || 1), 0);
     setCartCount(totalQty);
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (window.scrollY > 20) setIsScrolled(true);
+      else setIsScrolled(false);
     };
     window.addEventListener("scroll", handleScroll);
 
@@ -66,94 +64,87 @@ export default function Navbar() {
     { name: 'Tentang Kami', path: '/about' },
   ];
 
-  const isHome = pathname === '/';
-  const navBgClass = isHome && !isScrolled ? "bg-transparent py-4" : "bg-white border-b border-gray-200 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.05)]";
-  const textColorClass = isHome && !isScrolled ? "text-white hover:text-blue-200" : "text-gray-500 hover:text-black";
-  const activeTextColorClass = isHome && !isScrolled ? "text-white font-bold" : "text-black font-bold";
-
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${navBgClass}`}>
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+    // NAVBAR KAPSUL MELAYANG
+    <nav className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-in-out w-[95%] max-w-5xl ${
+      isScrolled ? "top-4" : "top-6"
+    }`}>
+      <div className={`flex items-center justify-between px-6 py-3.5 rounded-full transition-all duration-300 ${
+        isScrolled 
+        ? "bg-white/95 backdrop-blur-md shadow-lg border border-gray-200" 
+        : "bg-white/80 backdrop-blur-sm shadow-md border border-white/30"
+      }`}>
         
-        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center">
-          <Logo /> 
+        {/* LOGO */}
+        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-2">
+          <span className="font-black text-xl tracking-tight" style={{ color: themeColor }}>
+            Cetak Lagi
+          </span>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-8">
+        {/* MENU TENGAH */}
+        <div className="hidden lg:flex items-center gap-6">
           {menus.map((menu) => {
             const isActive = pathname === menu.path;
             return (
               <Link 
                 key={menu.name} 
                 href={menu.path} 
-                className={`text-sm tracking-wide transition-colors duration-200 font-medium ${
-                  isActive ? activeTextColorClass : textColorClass
+                className={`text-sm font-medium transition-colors duration-200 ${
+                  isActive ? "font-bold" : "text-gray-500 hover:text-gray-900"
                 }`}
+                style={{ color: isActive ? themeColor : undefined }}
               >
                 {menu.name}
               </Link>
             )
           })}
 
+          {/* DASHBOARD ADMIN (Di sebelah Tentang Kami) */}
           {!isLoading && user && user.email === ADMIN_EMAIL && (
             <Link 
               href="/admin" 
-              className={`text-sm font-bold px-4 py-1.5 rounded-full border-2 transition-all ${
-                pathname === "/admin" 
-                ? "bg-[#D94841] text-white border-[#D94841]" 
-                : isHome && !isScrolled 
-                  ? "text-white border-white hover:bg-white hover:text-[#2536F4]" 
-                  : "text-[#D94841] border-[#D94841] hover:bg-[#D94841] hover:text-white"
-              }`}
+              className="text-xs font-black text-white px-5 py-2 rounded-full transition-transform hover:scale-105 shadow-md shadow-blue-900/20" 
+              style={{ backgroundColor: themeColor }}
             >
-              Dashboard Admin
+              DASHBOARD ADMIN
             </Link>
           )}
         </div>
 
-        <div className="flex items-center gap-4 sm:gap-6">
-          <Link href="/cart" className={`relative transition-colors p-1 ${textColorClass}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+        {/* KANAN */}
+        <div className="flex items-center gap-4">
+          
+          <Link href="/cart" className="relative p-1 text-gray-500 hover:text-gray-900 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
-            
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] text-[10px] font-black text-white bg-[#D94841] rounded-full px-1 border-2 border-white animate-bounce">
+              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] text-[10px] font-black text-white rounded-full px-1 border-2 border-white animate-bounce" style={{ backgroundColor: badgeColor }}>
                 {cartCount}
               </span>
             )}
           </Link>
 
-          <div className={`w-px h-5 hidden md:block ${isHome && !isScrolled ? 'bg-white/30' : 'bg-gray-200'}`}></div>
+          <div className="w-px h-5 bg-gray-300 hidden md:block"></div>
 
           {!isLoading && (
             user ? (
-              <Link href="/profile" className="flex items-center gap-3 group">
-                <div className={`w-9 h-9 border rounded-full flex items-center justify-center overflow-hidden transition-all ${
-                  isHome && !isScrolled ? 'bg-white/10 border-white/30 group-hover:border-white' : 'bg-gray-100 border-gray-200 group-hover:border-black'
-                }`}>
+              <Link href="/profile" className="flex items-center gap-2 group">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm border-2 border-white overflow-hidden" style={{ backgroundColor: themeColor }}>
                   {user.user_metadata?.avatar_url ? (
-                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" />
                   ) : (
-                    <div className={`w-full h-full flex items-center justify-center font-bold text-xs ${
-                      isHome && !isScrolled ? 'bg-white text-[#2536F4]' : 'bg-[#2E3C8B] text-white'
-                    }`}>
-                      {user.email.charAt(0).toUpperCase()}
-                    </div>
+                    user.email.charAt(0).toUpperCase()
                   )}
                 </div>
-                <span className={`text-sm font-bold max-w-[100px] truncate ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}>
-                  {user.user_metadata?.full_name?.split(" ")[0] || "Member"}
-                </span>
               </Link>
             ) : (
               <div className="flex items-center gap-4">
-                <Link href="/login" className={`text-sm font-semibold transition-colors ${textColorClass}`}>Log in</Link>
-                <Link href="/register" className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm ${
-                  isHome && !isScrolled 
-                  ? "bg-white text-[#2536F4] hover:bg-gray-100" 
-                  : "bg-[#2536F4] hover:bg-[#1C28B5] text-white"
-                }`}>Sign up</Link>
+                <Link href="/login" className="text-sm font-bold text-gray-500 hover:text-black">Login</Link>
+                <Link href="/register" className="text-sm font-bold text-white px-5 py-2 rounded-full transition-transform hover:scale-105 shadow-md shadow-blue-900/20" style={{ backgroundColor: themeColor }}>
+                  Daftar
+                </Link>
               </div>
             )
           )}

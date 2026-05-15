@@ -1,119 +1,90 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+// Pastikan nama file import-nya sesuai, lu bilang kemaren kecil semua kan?
+import Chatbotnew from './chatbotnew'; 
 
 export default function FloatingMenu() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false); // State baru khusus buat Chatbot
+  // 1. STATE (Otak buat nyimpen data buka-tutup)
+  const [isOpen, setIsOpen] = useState(false); // Buat buka/tutup menu bulat-bulat
+  const [showButton, setShowButton] = useState(false); // Buat animasi awal pas web di-load
+  
+  // INI DIA YANG BIKIN ERROR TADI (Sekarang udah diadain!)
+  const [isChatOpen, setIsChatOpen] = useState(false); // Buat nampilin jendela Chatbot
+
+  // Animasi muncul pas web pertama kali di-load
+  useEffect(() => {
+    setTimeout(() => {
+      setShowButton(true);
+    }, 1000); 
+  }, []);
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-[99] flex flex-col items-end gap-4">
+      {/* 2. RENDER CHATBOT (Disembunyiin kalau isChatOpen masih false) */}
+      <Chatbotnew isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* 3. CONTAINER FLOATING MENU (Kanan Bawah) */}
+      <div className={`fixed bottom-6 right-6 z-[90] flex flex-col items-end transition-all duration-700 ${
+        showButton ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+      }`}>
         
-        {/* Menu Platform */}
-        <div 
-          className={`flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${
-            isOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-50 pointer-events-none"
-          }`}
-        >
-          {/* Tombol Shopee */}
-          <a href="https://shopee.co.id/cetaklagi?entryPoint=ShopBySearch&searchKeyword=cetak%20lagi%20pekalongan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-            <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#EE4D2D]">Shopee</span>
-            <div className="w-12 h-12 bg-[#EE4D2D] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-              </svg>
-            </div>
-          </a>
-
-          {/* Tombol Instagram */}
-          <a href="https://instagram.com/cetaklagi.pkl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-            <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#E1306C]">Instagram</span>
-            <div className="w-12 h-12 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-              </svg>
-            </div>
-          </a>
-
-          {/* Tombol WhatsApp */}
-          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-            <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#25D366]">WhatsApp</span>
-            <div className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.63.44 3.16 1.2 4.46L3 21l4.75-1.22c1.28.74 2.76 1.17 4.25 1.17h.02Z" />
-              </svg>
-            </div>
-          </a>
-
-          {/* Tombol Chatbot AI (Telah diubah buat manggil pop-up) */}
+        {/* ISI MENU (Mekar ke atas) */}
+        <div className={`flex flex-col items-end gap-4 mb-4 transition-all duration-300 origin-bottom-right ${
+          isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-50 opacity-0 pointer-events-none'
+        }`}>
+          
+          {/* A. TOMBOL BUKA CHATBOT (Udah pakai button dan onClick) */}
           <button 
-            onClick={() => { 
-              setIsChatOpen(true); 
-              setIsOpen(false); // Tutup menu buletannya
-            }} 
-            className="flex items-center gap-3 group"
+            onClick={() => {
+              setIsChatOpen(true); // Buka chatbot
+              setIsOpen(false);    // Tutup menu floating
+            }}
+            className="flex items-center flex-row-reverse gap-3 group cursor-pointer border-none bg-transparent outline-none"
           >
-            <span className="bg-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 text-[#2E3C8B]">Tanya AI</span>
-            <div className="w-12 h-12 bg-[#2E3C8B] rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform">
+            <div className="relative w-12 h-12 bg-slate-900 border border-cyan-500 rounded-lg flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,255,255,0.3)] hover:shadow-[0_0_20px_rgba(0,255,255,0.6)] hover:-translate-y-1 transition-all z-10">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 10.5h.008v.008H8.25V10.5Zm5.25 0h.008v.008H13.5V10.5Zm3.75 0h.008v.008H17.25V10.5ZM12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 14.25h.008v.008H8.25v-.008Zm7.5 0h.008v.008h-.008v-.008Zm-3.75 3h.008v.008h-.008v-.008ZM12 22.5c-5.385 0-9.75-4.365-9.75-9.75v-4.5h19.5v4.5c0 5.385-4.365 9.75-9.75 9.75Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25a3 3 0 0 1 3 3v2.25h-6V5.25a3 3 0 0 1 3-3Z" />
               </svg>
             </div>
+            <span className="bg-slate-900/80 backdrop-blur-md border border-cyan-500/50 px-3 py-1.5 rounded-md shadow-[0_0_10px_rgba(0,255,255,0.2)] text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+              Tanya_AI
+            </span>
           </button>
+
+          {/* B. TOMBOL SHOPEE */}
+          <a href="https://shopee.co.id/tokolu" target="_blank" rel="noreferrer" className="flex items-center flex-row-reverse gap-3 group">
+            <div className="relative w-12 h-12 bg-slate-900 border border-[#EE4D2D] rounded-lg flex items-center justify-center text-[#EE4D2D] shadow-[0_0_10px_rgba(238,77,45,0.3)] hover:shadow-[0_0_20px_rgba(238,77,45,0.6)] hover:-translate-y-1 transition-all z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+            </div>
+            <span className="bg-slate-900/80 backdrop-blur-md border border-[#EE4D2D]/50 px-3 py-1.5 rounded-md shadow-[0_0_10px_rgba(238,77,45,0.2)] text-[10px] font-mono font-bold text-[#EE4D2D] uppercase tracking-widest opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">Shopee_Link</span>
+          </a>
+
+          {/* C. TOMBOL WA */}
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="flex items-center flex-row-reverse gap-3 group">
+            <div className="relative w-12 h-12 bg-slate-900 border border-[#25D366] rounded-lg flex items-center justify-center text-[#25D366] shadow-[0_0_10px_rgba(37,211,102,0.3)] hover:shadow-[0_0_20px_rgba(37,211,102,0.6)] hover:-translate-y-1 transition-all z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.54-4.24-7.136-7.136l1.292-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>
+            </div>
+            <span className="bg-slate-900/80 backdrop-blur-md border border-[#25D366]/50 px-3 py-1.5 rounded-md shadow-[0_0_10px_rgba(37,211,102,0.2)] text-[10px] font-mono font-bold text-[#25D366] uppercase tracking-widest opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">Hubungi_WA</span>
+          </a>
+
         </div>
 
-        {/* Tombol Utama (Buka/Tutup Menu) */}
+        {/* 4. SAKLAR UTAMA (TOGGLE) */}
         <button 
-          onClick={() => {
-            if (isChatOpen) setIsChatOpen(false); // Kalau chat lagi buka, tutup dulu
-            setIsOpen(!isOpen);
-          }}
-          className={`w-14 h-14 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-300 z-50 ${
-            isOpen ? 'rotate-[135deg] bg-gray-800' : isChatOpen ? 'bg-gray-400' : 'bg-[#D94841]'
-          }`}
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative flex items-center justify-center w-14 h-14 rounded-xl bg-slate-900 border border-cyan-400 text-cyan-400 shadow-[0_0_15px_rgba(0,255,255,0.4)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(0,255,255,0.7)] z-20 group"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-7 h-7">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
+          {!isOpen && <div className="absolute inset-0 rounded-xl border border-cyan-400 animate-ping opacity-30"></div>}
+          <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-red-500 border-red-500' : 'rotate-0'}`}>
+            {isOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 group-hover:scale-110 transition-transform"><path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" /></svg>
+            )}
+          </div>
         </button>
 
-      </div>
-
-      {/* POP-UP CHATBOT STREAMLIT MELAYANG */}
-      <div 
-        className={`fixed bottom-24 right-6 z-[100] w-[350px] sm:w-[400px] h-[550px] bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-gray-200 overflow-hidden flex flex-col transition-all duration-300 origin-bottom-right ${
-          isChatOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-50 translate-y-10 pointer-events-none"
-        }`}
-      >
-        {/* Header Chat */}
-        <div className="bg-[#2E3C8B] px-5 py-4 flex items-center justify-between shadow-md z-10">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🤖</span>
-            <div>
-              <h3 className="font-bold text-white text-sm">Cetaklagi AI Assistant</h3>
-              <p className="text-blue-200 text-[10px] uppercase tracking-wider font-bold">Online</p>
-            </div>
-          </div>
-          <button 
-            onClick={() => setIsChatOpen(false)}
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Body Chat (Iframe Streamlit) */}
-        <div className="flex-1 w-full bg-[#FAFAFA] relative">
-          {/* Ganti src ini dengan link hosting Streamlit lu! */}
-          <iframe 
-            src="https://caincetaklagi.streamlit.app/?embed=true" 
-            className="w-full h-full border-none absolute inset-0"
-            title="AI Chatbot"
-          />
-        </div>
       </div>
     </>
   );

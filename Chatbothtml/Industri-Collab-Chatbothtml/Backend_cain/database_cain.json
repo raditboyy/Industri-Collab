@@ -1,0 +1,39 @@
+{
+  "pengetahuan": {
+    "sapaan": ["halo", "hai", "pagi", "siang", "sore", "ping", "assalamualaikum"],
+    "produk_banner": ["banner", "spanduk", "baliho", "mmt", "backdrop"],
+    "produk_stiker": ["stiker", "sticker", "label"],
+    "produk_kertas": ["brosur", "flyer", "poster", "print a3", "dokumen"],
+    "katalog": ["katalog", "pricelist", "price list", "daftar harga", "menu", "contoh", "portofolio"],
+    "harga_umum": ["harga", "biaya", "habis berapa"],
+    "pengiriman": ["kirim", "ongkir", "gojek", "grab", "jne", "cod", "ekspedisi", "lokasi", "alamat"],
+    "waktu": ["lama", "kapan jadi", "hari", "express", "kilat", "cepat"],
+    "jam_buka": ["jam buka", "tutup", "libur", "operasional"],
+    "pembayaran": ["bayar via", "transfer", "qris", "rekening", "dp"],
+    "format_file": ["format file", "resolusi", "pecah", "cdr", "pdf", "psd"],
+    "minimal_order": ["satuan", "minimal", "jumlah minimal", "sedikit"],
+    "jasa_desain": ["desain", "edit", "setting", "revisi"],
+    "beda_bahan": ["beda bontax", "beda vinyl", "anti air", "bahan bagus"],
+    "finishing": ["mata ayam", "lubang", "laminasi", "doff", "glossy", "potong", "cutting"],
+    "selesai": ["terima kasih", "makasih", "suwun", "thanks", "ok makasih", "oke makasih"]
+  },
+  "list_bahan": {
+    "banner": ["flexi", "korchin", "albatros"],
+    "stiker": ["bontax", "vinyl", "chromo", "hologram", "transparan"],
+    "kertas": ["art paper", "art carton", "hvs", "ivory"]
+  },
+  "jawaban_faq": {
+    "sapaan": "Halo kak! Cain di sini, asisten percetakan dari Jogja. Ada yang mau dicetak hari ini?",
+    "katalog": "Untuk katalog produk, daftar harga, dan contoh hasil cetak, kakak bisa cek di IG kita @PercetakanJogja atau sebutin aja mau cetak apa (misal: banner, stiker), nanti Cain bantu hitungin harganya! ✨",
+    "pengiriman": "Toko kita lokasinya di pusat Jogja kak. Bisa kirim via Gojek/Grab buat area sekitar, atau via J&T/Cargo buat luar kota/pulau!",
+    "waktu": "Pengerjaan normal 1-2 hari kerja kak. Kalau lagi buru-buru, kita ada layanan EXPRESS kilat (sehari jadi) lho!",
+    "jam_buka": "Toko kita buka setiap hari Senin - Sabtu dari jam 08:00 pagi sampai 20:00 malam kak. Minggu kita libur ya.",
+    "pembayaran": "Untuk pembayaran bisa transfer via BCA, Mandiri, atau scan QRIS kak. Kalau nominalnya besar, bisa DP 50% dulu kok!",
+    "jasa_desain": "Bisa banget kita buatin desainnya kak! Biaya jasa desain mulai Rp 20.000 aja, free revisi maksimal 3 kali sampai fix siap cetak.",
+    "format_file": "Biar hasil cetaknya tajam dan nggak pecah, file desainnya dikirim dalam format PDF, CDR, atau JPG hires ya kak.",
+    "minimal_order": "Tergantung produknya kak! Banner dan poster bisa satuan. Tapi kalau stiker A3+, kartu nama, atau brosur ada minimal ordernya. Kakak mau cetak apa nih?",
+    "beda_bahan": "Stiker Bontax itu kertas (buat produk kering), Vinyl plastik (anti air). Kalau banner Flexi itu standar, Korchin lebih tebal/awet.",
+    "finishing": "Finishing lengkap kak! Banner free mata ayam (lubang). Kertas/stiker bisa laminasi Glossy (mengkilap) atau Doff (matte).",
+    "selesai": "Sama-sama kak! Kalau butuh bantuan cetak lagi, langsung chat Cain aja ya. Have a nice day!"
+  }
+}

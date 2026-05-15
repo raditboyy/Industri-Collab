@@ -1,34 +1,35 @@
-"use client"; // Tambahkan ini di paling atas kalau belum ada
-import "./globals.css";
-import { Inter } from "next/font/google";
-import { usePathname } from "next/navigation";
-import Navbar from "@/components/navbar"; 
-import ProtectedRoute from "@/components/ProtectedRoute"; 
-import FloatingMenu from "@/components/floatingmenu"; // TAMBAHAN: Import Floating Menu
+import Navbar from '@/components/navbar';
+// FIX HURUF KECIL SEMUA SESUAI FILE LU BOS!
+import FloatingMenu from '@/components/floatingmenu'; 
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata = {
+  title: 'Kuli Desain | Makes Beautiful Day',
+  description: 'Platform cetak dan desain terbaik',
+};
 
 export default function RootLayout({ children }) {
-  const pathname = usePathname();
-  
-  // Tentukan halaman mana saja yang GAK MAU pakai Navbar utama
-  const noNavbarRoutes = ["/company-profile"];
-  const isNoNavbar = noNavbarRoutes.includes(pathname);
-
   return (
     <html lang="id">
-      <body className={`${inter.className} antialiased bg-white`}>
-        {/* Navbar cuma muncul kalau BUKAN halaman company-profile */}
-        {!isNoNavbar && <Navbar />} 
+      <body className="min-h-screen antialiased relative">
         
-        {/* TAMBAHAN: Tombol melayang dipasang di luar main biar muncul terus */}
+        {/* GAMBAR AWAN FULL NYENTRONG */}
+        <div 
+          className="fixed inset-0 z-[-2] bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('/bg-awan.jpg')` }}
+        ></div>
+        
+        {/* LAPISAN KACA FILM BIRU GELAP */}
+        <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-[#2E3C8B]/60 to-[#0A1128]/80"></div>
+
+        {/* PASANG FLOATING MENU DI SINI BIAR MUNCUL DI SEMUA HALAMAN */}
         <FloatingMenu />
+
+        <Navbar />
         
-        <ProtectedRoute>
-          <main>
-            {children}
-          </main>
-        </ProtectedRoute>
+        <main className="pt-32 pb-10">
+          {children}
+        </main>
       </body>
     </html>
   );
