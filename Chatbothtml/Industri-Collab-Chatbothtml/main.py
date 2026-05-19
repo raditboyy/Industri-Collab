@@ -170,7 +170,7 @@ def proses_jawaban(session_id, teks_user):
             return f"Pesanan udah komplit! (Produk: {topik.split('_')[1].upper()}, Ukuran: {memori['ukuran']}, Bahan: {memori['bahan']}, Jumlah: {memori['jumlah']}). Kirim rekap pesanan ini ke Admin WA buat konfirmasi harga ya."
 
     # --- FALLBACK TERAKHIR ---
-    return "Wah, Cain bingung nih kak 😅. Cain cuma paham urusan percetakan aja. Kakak lagi butuh cetak apa nih untuk area Jogja dan sekitarnya?"
+    return "Wah, Cain bingung nih kak 😅. Cain cuma paham urusan percetakan aja. Mungkin untuk detail pemesanan kakak bisa langsung hubungi admin kami pada menu di bawah ini ya kak😁"
 
 @app.post("/chat")
 async def chat_dengan_cain(request: ItemPesan):

@@ -1,10 +1,10 @@
 import Navbar from '@/components/navbar';
-// FIX HURUF KECIL SEMUA SESUAI FILE LU BOS!
+import FloatingNav from "@/components/floatingnav"; // Ini yang buat tombol "Selanjutnya"
 import FloatingMenu from '@/components/floatingmenu'; 
 import './globals.css';
 
 export const metadata = {
-  title: 'Kuli Desain | Makes Beautiful Day',
+  title: 'Cetak Lagi | Make a good moment!',
   description: 'Platform cetak dan desain terbaik',
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
         {/* LAPISAN KACA FILM BIRU GELAP */}
         <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-[#2E3C8B]/60 to-[#0A1128]/80"></div>
 
-        {/* PASANG FLOATING MENU DI SINI BIAR MUNCUL DI SEMUA HALAMAN */}
+        {/* Menu melayang lu yang lama */}
         <FloatingMenu />
 
         <Navbar />
@@ -30,6 +30,11 @@ export default function RootLayout({ children }) {
         <main className="pt-32 pb-10">
           {children}
         </main>
+
+        {/* --- INI YANG GUE TAMBAHIN --- */}
+        {/* Tombol "Halaman Selanjutnya" bakal muncul di pojok kanan bawah di semua page */}
+        <FloatingNav /> 
+
       </body>
     </html>
   );

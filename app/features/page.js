@@ -5,38 +5,40 @@ export default function Features() {
     {
       title: "Order Online 24/7",
       description: "Tidak perlu antre di toko. Upload desain, pilih bahan, dan bayar kapan saja dari mana saja.",
-      icon: "🌐",
-      color: "bg-blue-50 text-[#2E3C8B] border-blue-100"
+      // Dibuat full persegi dengan object-cover
+      icon: <img src="/tangan-hp.png" alt="Order" className="w-full h-full object-cover" />,
+      // p-0 ditambahin biar nggak ada jarak antara gambar dan pinggiran kotak
+      color: "bg-blue-50 p-0" 
     },
     {
       title: "Kualitas Standar Industri",
       description: "Dicetak menggunakan mesin Konica Minolta & HP Indigo terbaru. Akurasi warna 99% sesuai monitor.",
-      icon: "🖨️",
-      color: "bg-red-50 text-[#D94841] border-red-100"
+      icon: <img src="/printing-pg.png" alt="Order" className="w-full h-full object-cover" />,
+      color: "bg-red-50 text-[#D94841] p-0"
     },
     {
       title: "Eksekusi Kilat (Sameday)",
       description: "Deadline mepet? Pilih layanan Express. Pesan pagi, sore pesanan sudah bisa diambil atau dikirim.",
-      icon: "⚡",
-      color: "bg-yellow-50 text-yellow-600 border-yellow-100"
+      icon: <img src="/petir-pg.png" alt="Order" className="w-full h-full object-cover" />,
+      color: "bg-yellow-50 text-yellow-600 p-0"
     },
     {
       title: "Garansi Cetak Ulang",
       description: "Warna meleset atau potongan miring? Kami ganti 100% tanpa biaya tambahan. Kepuasan terjamin.",
-      icon: "🛡️",
-      color: "bg-green-50 text-green-600 border-green-100"
+      icon: <img src="/shield-pg.png" alt="Order" className="w-full h-full object-cover" />,
+      color: "bg-green-50 text-green-600 p-0"
     },
     {
       title: "Live Tracking Pesanan",
       description: "Pantau status pesananmu secara real-time. Dari antrean cetak, finishing, hingga diserahkan ke kurir.",
-      icon: "📱",
-      color: "bg-purple-50 text-purple-600 border-purple-100"
+      icon: <img src="/handphone-pg.png" alt="Order" className="w-full h-full object-cover" />,
+      color: "bg-purple-50 text-purple-600 p-0"
     },
     {
       title: "Support Kuli Design",
       description: "Belum punya desain? Tim Kuli Design siap membantu dari konsep hingga file siap cetak.",
-      icon: "🎨",
-      color: "bg-orange-50 text-orange-600 border-orange-100"
+      icon: <img src="/support-pg.png" alt="Order" className="w-full h-full object-cover" />,
+      color: "bg-orange-50 text-orange-600 p-0"
     }
   ];
 
@@ -50,10 +52,10 @@ export default function Features() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] pb-24">
       
-      {/* SEKSI 1: HERO (Kalem & Clean) */}
+      {/* SEKSI 1: HERO */}
       <section className="pt-24 pb-16 px-4 max-w-4xl mx-auto text-center">
         <span className="text-[#D94841] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
-          Kenapa Memilih CetakPro?
+          Kenapa Memilih Cetak Lagi?
         </span>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#2E3C8B] mb-6 leading-[1.15]">
           Fokus pada karyamu, <br className="hidden sm:block" /> biarkan kami yang mencetak.
@@ -71,7 +73,9 @@ export default function Features() {
               key={index} 
               className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 border ${feat.color}`}>
+              {/* overflow-hidden penting biar gambar nggak keluar dari rounded corner */}
+              {/* HAPUS 'border' dari className di sini */}
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-6 overflow-hidden ${feat.color}`}>
                 {feat.icon}
               </div>
               <h3 className="text-xl font-bold text-[#2E3C8B] mb-3 tracking-tight">
@@ -85,11 +89,10 @@ export default function Features() {
         </div>
       </section>
 
-      {/* SEKSI 3: CARA KERJA (Step by Step) */}
+      {/* SEKSI 3: CARA KERJA */}
       <section className="px-4 max-w-5xl mx-auto mb-32">
         <div className="bg-[#2E3C8B] rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden shadow-xl shadow-blue-900/10">
           
-          {/* Efek Lingkaran Blur di Background */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#D94841]/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
 
@@ -103,7 +106,6 @@ export default function Features() {
           <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((item, idx) => (
               <div key={idx} className="relative group">
-                {/* Garis Penghubung (Hanya muncul di Desktop) */}
                 {idx !== steps.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-[60%] w-[80%] h-px bg-white/20 border-t border-dashed border-white/30"></div>
                 )}

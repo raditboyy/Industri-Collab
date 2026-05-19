@@ -31,7 +31,7 @@ export default function Partner() {
       <section className="py-24 px-4 max-w-5xl mx-auto text-center border-b border-gray-100">
         <div className="flex items-center justify-center gap-4 mb-8">
           <span className="px-4 py-1.5 rounded-full bg-gray-100 text-sm font-bold text-black uppercase tracking-widest">
-            CetakPro
+            Cetak Lagi
           </span>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

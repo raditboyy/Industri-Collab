@@ -6,7 +6,7 @@ export default function CompanyProfile() {
       
       {/* Navbar Khusus Halaman Ini - Super Clean */}
       <nav className="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center backdrop-blur-sm">
-        <div className="font-black text-2xl tracking-tighter">CETAKPRO.</div>
+        <div className="font-black text-2xl tracking-tighter">Cetak Lagi</div>
         <div className="flex gap-8 items-center">
           <Link href="/about" className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">
             ← Kembali ke Web Utama
@@ -56,7 +56,7 @@ export default function CompanyProfile() {
 
       {/* Footer Khusus */}
       <footer className="py-20 px-6 md:px-20 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-10">
-        <div className="text-sm text-gray-600">© 2026 CetakPro Corporate Division.</div>
+        <div className="text-sm text-gray-600">© 2026 Cetak Lagi Corporate Division.</div>
         <div className="flex gap-10">
           <Link href="/" className="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition-colors">Order Platform</Link>
           <Link href="/about" className="text-xs font-bold uppercase tracking-widest hover:text-gray-400 transition-colors">About Us</Link>

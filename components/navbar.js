@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import Logo from '@/components/logo'; 
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -14,9 +13,9 @@ export default function Navbar() {
 
   const ADMIN_EMAIL = "admin@cetaklagi.com"; 
   
-  // WARNA TEMA BALIK KE BIRU TUA CETAKLAGI
-  const themeColor = "#2E3C8B"; 
-  const badgeColor = "#D94841"; // Merah untuk notif keranjang
+  // WARNA TEMA
+  const themeColor = "#2E3C8B"; // Biru Tua
+  const badgeColor = "#D94841"; // Merah
 
   const updateCartBadge = () => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -75,11 +74,18 @@ export default function Navbar() {
         : "bg-white/80 backdrop-blur-sm shadow-md border border-white/30"
       }`}>
         
-        {/* LOGO */}
-        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-2">
-          <span className="font-black text-xl tracking-tight" style={{ color: themeColor }}>
-            Cetak Lagi
-          </span>
+        {/* ========================================================= */}
+        {/* LOGO FONT CETAKLAGI (MURNI TEKS, BUKAN GAMBAR KOTAK) */}
+        {/* ========================================================= */}
+        <Link href="/" className="hover:opacity-80 transition-opacity flex flex-col items-start justify-center pt-1">
+          <div className="font-black text-2xl tracking-tighter leading-none flex items-baseline">
+            <span style={{ color: themeColor }}>Cetak</span>
+            <span style={{ color: badgeColor }}>lagi</span>
+          </div>
+          <div className="text-[9px] font-bold tracking-wide mt-0.5">
+            <span style={{ color: themeColor }}>Make a </span>
+            <span style={{ color: badgeColor }}>good moment!</span>
+          </div>
         </Link>
 
         {/* MENU TENGAH */}
@@ -100,7 +106,7 @@ export default function Navbar() {
             )
           })}
 
-          {/* DASHBOARD ADMIN (Di sebelah Tentang Kami) */}
+          {/* DASHBOARD ADMIN */}
           {!isLoading && user && user.email === ADMIN_EMAIL && (
             <Link 
               href="/admin" 

@@ -75,7 +75,7 @@ export default function CheckoutStruk() {
       >
         <div className="text-center pb-5 mb-5 border-b-2 border-dashed border-gray-200">
           <h1 className="text-3xl font-black tracking-tight mb-1">
-            <span className="text-[#2E3C8B]">Cetak</span><span className="text-[#D94841]">Pro</span>
+            <span className="text-[#2E3C8B]">Cetak</span><span className="text-[#D94841]">Lagi</span>
           </h1>
           <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">Make a good moment!</p>
           <p className="text-xs text-gray-400 mt-3 font-medium">Tanggal: {orderData.date}</p>

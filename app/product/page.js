@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -24,20 +25,15 @@ function ProductCard({ product, formatRupiah }) {
   const handleAddQty = () => { if (qty < product.stock) setQty(qty + 1); };
   const handleMinQty = () => { if (qty > 1) setQty(qty - 1); };
 
-  // FUNGSI INI UDAH GUA PERBAIKI BIAR NYIMPANNYA PAKAI NAMA "quantity"
   const handleAddToCart = () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingIndex = cart.findIndex((item) => item.id === product.id);
     
     if (existingIndex >= 0) {
-      // Ambil quantity yang lama, tambahin sama qty yang baru diinput
       const currentQty = cart[existingIndex].quantity || cart[existingIndex].qty || 1;
       cart[existingIndex].quantity = currentQty + qty;
-      
-      // Hapus data "qty" lama biar nggak nyampah dan bikin bingung
       delete cart[existingIndex].qty;
     } else {
-      // Simpan barang baru pakai nama "quantity"
       cart.push({ ...product, quantity: qty });
     }
 
@@ -57,7 +53,13 @@ function ProductCard({ product, formatRupiah }) {
         <Link href={`/product/${product.id}`} className="block flex-grow">
           <div className="aspect-square bg-gray-50 rounded-[1.5rem] mb-4 flex items-center justify-center relative overflow-hidden">
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              // INI YANG DIUBAH: Pake motion.img + layoutId
+              <motion.img 
+                layoutId={`product-image-${product.id}`}
+                src={product.image_url} 
+                alt={product.name} 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+              />
             ) : (
               <span className="text-4xl">📦</span>
             )}
@@ -177,14 +179,37 @@ export default function Product() {
       </section>
 
       <div className="flex justify-center mb-10 sticky top-20 z-40 px-4">
-        <div className="bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-gray-200 shadow-sm flex gap-2">
-          <button onClick={() => { setActiveTab("produk"); setSelectedCategory("Semua"); }} 
-            className={`px-6 py-2 rounded-full text-sm font-bold transition ${activeTab === "produk" ? "bg-[#2E3C8B] text-white" : "text-gray-500"}`}>
+        <div className="bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-gray-200 shadow-sm flex gap-2 relative">
+          <button 
+            onClick={() => { setActiveTab("produk"); setSelectedCategory("Semua"); }} 
+            className={`relative px-6 py-2 rounded-full text-sm font-bold transition-colors duration-300 z-10 ${
+              activeTab === "produk" ? "text-white" : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
             Produk
+            {activeTab === "produk" && (
+              <motion.div 
+                layoutId="activeTabPill"
+                className="absolute inset-0 bg-[#2E3C8B] rounded-full -z-10"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
           </button>
-          <button onClick={() => setActiveTab("kategori")} 
-            className={`px-6 py-2 rounded-full text-sm font-bold transition ${activeTab === "kategori" ? "bg-[#2E3C8B] text-white" : "text-gray-500"}`}>
+
+          <button 
+            onClick={() => setActiveTab("kategori")} 
+            className={`relative px-6 py-2 rounded-full text-sm font-bold transition-colors duration-300 z-10 ${
+              activeTab === "kategori" ? "text-white" : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
             Kategori
+            {activeTab === "kategori" && (
+              <motion.div 
+                layoutId="activeTabPill"
+                className="absolute inset-0 bg-[#2E3C8B] rounded-full -z-10"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
           </button>
         </div>
       </div>
