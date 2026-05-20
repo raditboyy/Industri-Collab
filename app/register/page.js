@@ -72,7 +72,7 @@ export default function Register() {
             Mulai perjalanan kreatifmu bersama kami.
           </h1>
           <p className="text-gray-600 leading-relaxed font-medium">
-            Buat akun CetakPro sekarang dan nikmati kemudahan mencetak dengan harga bersahabat, kualitas hebat, dan eksekusi secepat kilat.
+            Buat akun Cetak Lagi sekarang dan nikmati kemudahan mencetak dengan harga bersahabat, kualitas hebat, dan eksekusi secepat kilat.
           </p>
         </div>
       </div>
