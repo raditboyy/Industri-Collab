@@ -63,7 +63,7 @@ export default function Profile() {
               {user?.email?.charAt(0).toUpperCase()}
             </div>
             <h2 className="text-xl font-black text-gray-800 truncate px-2">{user?.email}</h2>
-            <p className="text-xs text-gray-400 font-bold mt-1 uppercase tracking-widest">Pelanggan CetakPro</p>
+            <p className="text-xs text-gray-400 font-bold mt-1 uppercase tracking-widest">Pelanggan Cetak Lagi</p>
             
             <div className="mt-10">
               <button 
@@ -92,7 +92,7 @@ export default function Profile() {
               <div className="bg-white p-16 rounded-[2.5rem] border border-gray-100 text-center shadow-sm">
                 <div className="text-5xl mb-4 opacity-50">🛍️</div>
                 <h3 className="text-lg font-bold text-gray-800 mb-2">Belum Ada Transaksi</h3>
-                <p className="text-gray-500 text-sm">Ayo buat momen terbaikmu bersama CetakPro sekarang!</p>
+                <p className="text-gray-500 text-sm">Ayo buat momen terbaikmu bersama Cetak Lagi sekarang!</p>
               </div>
             ) : (
               orders.map((order) => (

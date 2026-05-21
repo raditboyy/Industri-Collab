@@ -6,7 +6,7 @@ export default function Features() {
       title: "Order Online 24/7",
       description: "Tidak perlu antre di toko. Upload desain, pilih bahan, dan bayar kapan saja dari mana saja.",
       // Dibuat full persegi dengan object-cover
-      icon: <img src="/tangan-hp.png" alt="Order" className="w-full h-full object-cover" />,
+      icon: <img src="/telp.png" alt="Order" className="w-full h-full object-cover" />,
       // p-0 ditambahin biar nggak ada jarak antara gambar dan pinggiran kotak
       color: "bg-blue-50 p-0" 
     },

@@ -29,7 +29,7 @@ export default function CompanyProfile() {
           <div className="flex gap-4">
             <div className="h-20 w-px bg-white/20 hidden md:block"></div>
             <div className="text-xs uppercase tracking-[0.3em] text-gray-500">
-              Based in Sidoarjo, Indonesia <br /> Est. 2021
+              Based in Pekalongan, Indonesia <br /> Est. 2025
             </div>
           </div>
         </div>
