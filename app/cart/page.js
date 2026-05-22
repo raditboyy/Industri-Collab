@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import CustomAlert from "@/components/customalert"; 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,6 +11,11 @@ export default function Keranjang() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // === STATE UNTUK CUSTOM ALERT ===
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
 
   // 1. AMBIL DATA DARI LOCAL STORAGE
   useEffect(() => {
@@ -21,12 +27,10 @@ export default function Keranjang() {
   const saveCart = (newCart) => {
     setCartItems(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
-    // Dispatch ke storage & custom event biar navbar update badge
     window.dispatchEvent(new Event('storage'));
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  // Logika hitung subtotal (menggunakan .qty agar sinkron dengan detail produk)
   const subtotal = cartItems.reduce((total, item) => total + (item.price * (item.qty || 1)), 0);
   const adminFee = cartItems.length > 0 ? 2500 : 0;
   const total = subtotal + adminFee;
@@ -61,12 +65,12 @@ export default function Keranjang() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        alert("Sesi login berakhir. Silakan login ulang, Bos!");
-        router.push("/login");
-        return;
+        setAlertType("warning");
+        setAlertMessage("Sesi login berakhir. Silakan login ulang, Bos!");
+        setShowAlert(true);
+        return; 
       }
 
-      // Simpan setiap item ke tabel 'orders'
       for (const item of cartItems) {
         const { error: insertError } = await supabase
           .from("orders")
@@ -82,7 +86,6 @@ export default function Keranjang() {
         if (insertError) throw new Error(`Gagal menyimpan ${item.name}: ${insertError.message}`);
       }
 
-      // Simpan data untuk Struk
       localStorage.setItem('cetakpro_last_order', JSON.stringify({
         items: cartItems,
         subtotal: subtotal,
@@ -96,7 +99,9 @@ export default function Keranjang() {
 
     } catch (error) {
       console.error("Checkout Error:", error.message);
-      alert("Gagal Simpan! Error: " + error.message);
+      setAlertType("error");
+      setAlertMessage("Gagal Simpan! Error: " + error.message);
+      setShowAlert(true);
     } finally {
       setIsProcessing(false);
     }
@@ -105,7 +110,7 @@ export default function Keranjang() {
   if (isLoading) return <div className="min-h-screen flex items-center justify-center font-black text-[#2E3C8B]">MEMUAT...</div>;
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] pb-24 pt-32">
+    <div className="min-h-screen bg-[#FAFAFA] pb-24 pt-32 relative">
       <div className="max-w-6xl mx-auto px-6">
         
         {/* TOMBOL KEMBALI */}
@@ -127,7 +132,6 @@ export default function Keranjang() {
         <h1 className="text-4xl font-black text-[#2E3C8B] mb-10 tracking-tight uppercase">Keranjang Belanja</h1>
 
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* KOLOM KIRI: DAFTAR BARANG */}
           <div className="w-full lg:w-2/3 space-y-6">
             <AnimatePresence>
               {cartItems.length === 0 ? (
@@ -180,11 +184,9 @@ export default function Keranjang() {
             </AnimatePresence>
           </div>
 
-          {/* KOLOM KANAN: RINGKASAN */}
           <div className="w-full lg:w-1/3">
             <div className="bg-white p-8 md:p-10 rounded-[3.5rem] shadow-sm border border-gray-100 sticky top-32">
               <h2 className="text-2xl font-black text-[#0A0F2C] mb-8 border-b border-gray-50 pb-6 uppercase">Ringkasan</h2>
-              
               <div className="space-y-4 mb-8 text-gray-500 font-bold">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
@@ -195,14 +197,12 @@ export default function Keranjang() {
                   <span className="text-[#0A0F2C]">{formatRupiah(adminFee)}</span>
                 </div>
               </div>
-
               <div className="bg-gray-50 p-6 rounded-[2rem] mb-8 border border-gray-100">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-600">Total Tagihan</span>
                   <span className="text-2xl font-black text-[#D94841]">{formatRupiah(total)}</span>
                 </div>
               </div>
-
               <button 
                 onClick={handleCheckout} 
                 disabled={cartItems.length === 0 || isProcessing}
@@ -214,6 +214,21 @@ export default function Keranjang() {
           </div>
         </div>
       </div>
+
+      {/* === PEMANGGILAN CUSTOM ALERT === */}
+      {showAlert && (
+        <CustomAlert 
+          isOpen={true}
+          type={alertType}
+          message={alertMessage} 
+          onClose={() => {
+            setShowAlert(false);
+            if (alertType === "warning") {
+              router.push("/login");
+            }
+          }} 
+        />
+      )}
     </div>
   );
 }

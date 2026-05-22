@@ -1,47 +1,60 @@
-"use client";
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
 
-export default function CustomAlert({ isOpen, message, onClose }) {
+// Tambahin prop 'type' (default-nya 'success')
+export default function CustomAlert({ isOpen, message, onClose, type = 'success' }) {
+  if (!isOpen) return null;
+
+  // Bikin logic ganti warna dan ikon tergantung tipe alert-nya
+  const isError = type === 'error';
+  const isWarning = type === 'warning';
+
+  // Tentukan warna latar ikon
+  const iconBgColor = isError ? 'bg-red-500' : isWarning ? 'bg-yellow-500' : 'bg-[#2E3C8B]';
+  
+  // Tentukan teks tombol
+  const buttonText = isError ? 'TUTUP' : isWarning ? 'LOGIN ULANG' : 'OKE MANTAP';
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 pointer-events-none">
-          {/* Backdrop Blur */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto"
-          />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+      {/* Kotak Putih dengan gradient bawah ala screenshot lu */}
+      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center relative overflow-hidden border border-gray-100">
+        
+        {/* Efek gradient biru di bagian bawah */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#2E3C8B]/20 to-transparent -z-10 pointer-events-none"></div>
 
-          {/* Pop-up Box */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            className="pointer-events-auto relative max-w-sm w-full bg-white/60 backdrop-blur-xl border-[6px] border-white/80 rounded-[32px] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] text-center"
-          >
-            {/* Icon Sukses (Opsional) */}
-            <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center bg-[#2E3C8B] text-white rounded-full shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-              </svg>
-            </div>
-
-            <h3 className="text-[#2E3C8B] font-black text-xl leading-tight mb-6">
-              {message}
-            </h3>
-
-            <button
-              onClick={onClose}
-              className="w-full py-3 bg-[#2E3C8B] text-white font-bold rounded-2xl hover:bg-[#1C28B5] transition-all active:scale-95 shadow-lg shadow-blue-900/20"
-            >
-              OKE MANTAP
-            </button>
-          </motion.div>
+        {/* IKON DINAMIS */}
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md ${iconBgColor}`}>
+          {isError ? (
+            // Ikon Silang (Error)
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : isWarning ? (
+            // Ikon Tanda Seru (Warning/Sesi Habis)
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          ) : (
+            // Ikon Centang (Success - default)
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
         </div>
-      )}
-    </AnimatePresence>
+
+        {/* Teks Pesan */}
+        <h3 className="text-xl font-black text-[#2E3C8B] mb-8 leading-tight px-2">
+          {message}
+        </h3>
+
+        {/* Tombol Aksi */}
+        <button
+          onClick={onClose}
+          className="w-full bg-[#2E3C8B] hover:bg-[#1E2B6B] text-white font-black py-4 px-6 rounded-2xl transition-all uppercase tracking-wide shadow-lg active:scale-95"
+        >
+          {buttonText}
+        </button>
+      </div>
+    </div>
   );
 }

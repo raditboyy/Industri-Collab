@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import CustomAlert from '@/components/customalert';
 
 export default function CheckoutStruk() {
   const router = useRouter();
