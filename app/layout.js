@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         {/* GAMBAR AWAN FULL NYENTRONG */}
         <div 
           className="fixed inset-0 z-[-2] bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url('/bg-awan.jpg')` }}
+          style={{ backgroundImage: `url('background-awan.jpg')` }}
         ></div>
         
         {/* LAPISAN KACA FILM BIRU GELAP */}
