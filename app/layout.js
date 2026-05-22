@@ -4,6 +4,7 @@ import FloatingMenu from '@/components/floatingmenu';
 import './globals.css';
 
 export const metadata = {
+  metadataBase: new URL('https://cetaklagi.id'),
   title: 'Cetak Lagi | Make a good moment!',
   description: 'Platform cetak dan desain terbaik',
 };
