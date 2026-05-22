@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python chatbot runtime
+**/__pycache__/
+**/*.pyc
+Chatbothtml/Industri-Collab-Chatbothtml/.venv/
